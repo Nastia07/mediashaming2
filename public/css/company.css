@@ -537,10 +537,20 @@ p {
   .fundation__item,
   .fundation__item.reverse {
     grid-template-columns: 1fr;
+    margin: 0;
   }
 
   .fundation__item.reverse .fundation__image {
     grid-row: 2;
+  }
+
+  .fundation__image {
+    text-align: center;
+  }
+
+  .fundation__image img {
+    width: 75%;
+    margin: auto;
   }
 
   .news-block {
@@ -560,15 +570,20 @@ p {
 }
 
 @media screen and (max-width: 540px) {
+  h2,
+  .h2 {
+    font-size: 24px;
+  }
   .container,
   .container_small {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 20px 30px;
   }
   .companeis__list {
     grid-template-columns: 1fr;
   }
-
+  .title {
+    margin-bottom: 20px;
+  }
   .news-content {
     grid-template-columns: 1fr;
     row-gap: 0;
@@ -577,5 +592,11 @@ p {
   .news-block {
     width: 100%;
     margin: auto;
+  }
+
+  .orange_button {
+    display: block;
+    width: 80%;
+    margin: 0 auto 20px;
   }
 }
