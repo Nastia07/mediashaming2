@@ -126,10 +126,6 @@ p {
   background: var(--grey);
 }
 
-.footer__wrap {
-  padding: 70px;
-}
-
 .hero__wrap {
   display: grid;
   justify-content: center;
@@ -504,6 +500,25 @@ p {
 .responsible__info .blue {
   color: rgb(11, 154, 250);
 }
+
+@media screen and (min-width: 1601px) {
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+    margin: auto;
+    max-width: 1220px;
+    width: 100%;
+  }
+
+  .container_small {
+    padding-left: 0;
+    padding-right: 0;
+    margin: auto;
+    max-width: 1000px;
+    width: 100%;
+  }
+}
+
 @media screen and (max-width: 1440px) {
   .container {
     padding: 50px 90px;
