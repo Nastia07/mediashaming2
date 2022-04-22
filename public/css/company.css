@@ -98,6 +98,8 @@ p {
 }
 
 .header__wrap {
+  position: fixed;
+  z-index: 10;
   padding: 25px 40px;
   display: flex;
   justify-content: space-between;
@@ -132,6 +134,7 @@ p {
 }
 
 .hero__wrap {
+  padding-top: 180px;
   display: grid;
   justify-content: center;
 }
@@ -660,6 +663,7 @@ p {
   }
 
   .header__wrap {
+    position: static;
     justify-content: center;
     flex-direction: column;
     padding-top: 15px;
@@ -667,6 +671,10 @@ p {
   }
   .logo img {
     width: 50px;
+  }
+
+  .hero__wrap {
+    padding-top: 60px;
   }
 
   .header__wrap .orange_button {
