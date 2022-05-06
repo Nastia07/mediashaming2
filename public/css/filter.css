@@ -86,7 +86,7 @@
 
 .table__header {
   display: grid;
-  grid-template-columns: 25% 30% 45%;
+  grid-template-columns: 25% 20% 30% 25%;
   align-items: center;
   font-weight: 500;
   height: 56px;
@@ -95,7 +95,7 @@
 .table__item {
   border-top: 1px solid #dcdcdc;
   display: grid;
-  grid-template-columns: 25% 30% 20% 25%;
+  grid-template-columns: 25% 20% 30% 25%;
   align-items: center;
 }
 

@@ -37,7 +37,7 @@
             <div class="filter__input">
               <div class="input">
                 <label for="search" style="display: none">search</label>
-                <input id="search" type="text" class="input__item input__item--search" placeholder="Search"
+                <input id="search-name" type="text" class="input__item input__item--search" placeholder="Search"
                   autocomplete="off">
                 <button class="input__submit">
                   <svg class="input__icon" width="27" height="25" viewBox="0 0 27 25" fill="none"
@@ -47,6 +47,41 @@
                       fill="#606060" />
                   </svg>
                 </button>
+
+                <select id="search-status">
+                  <option value="None" selected>None</option>
+                  <option value="Suspension">Suspension</option>
+                  <option value="Withdrawal">Withdrawal</option>
+                  <option value="Digging In">Digging In</option>
+                  <option value="Buying Time">Buying Time</option>
+                </select>
+
+                <select id="search-industry">
+                  <option value="None" selected>None </option>
+                  <option value="Consumer Discretionary"> Consumer Discretionary   </option>
+                  <option value="Industrials"> Industrials </option>
+                  <option value="Information Technology"> Information Technology </option>
+                  <option value="Health Care">Health Care </option>
+                  <option value="Aerospace & Defense">Aerospace & Defense </option>
+                  <option value="Materials">Materials </option>
+                  <option value="Consumer Staples">Consumer Staples </option>
+                  <option value="Financials">Financials </option>
+                  <option value="Energy">Energy </option>
+                  <option value="Oil & Gas Operations">Oil & Gas Operations </option>
+                  <option value="NGO">NGO </option>
+                  <option value="Utilities">Utilities </option>
+                  <option value="Communication Services">Communication Services </option>
+                  <option value="Beverages">Beverages </option>
+                  <option value="Hotel & Motels">Hotel & Motels </option>
+                  <option value="Biotechnology & Drugs">Biotechnology & Drugs </option>
+                  <option value="Computer Services">Computer Services </option>
+                  <option value="Apparel & Accessories">Apparel & Accessories </option>
+                  <option value="Retail (Grocery)">Retail (Grocery) </option>
+                  <option value="Agricultural">Agricultural </option>
+                  <option value="Real Estate">Real Estate </option>
+                  <option value="Louis Dreyfus">Louis Dreyfus </option>
+                  <option value="White & Case">White & Case </option>
+                </select>
               </div>
             </div>
           </form>
@@ -57,6 +92,7 @@
         <div class="table__header">
           <div class="table__text table__cell">Logo</div>
           <div class="table__text table__cell">Name</div>
+          <div class="table__text table__cell">Industry</div>
           <div class="table__text table__cell">Status</div>
         </div>
         <div id="search-body" class="table__body"></div>
@@ -167,6 +203,10 @@
     const empty = document.getElementById('search-empty')
     const table = document.getElementById('search-table')
     const trigger = document.querySelector('.js-scroll-trigger-infinite-scroll')
+
+    const nameInput = document.getElementById('search-name')
+    const statusInput = document.getElementById('search-status')
+    const industryInput = document.getElementById('search-industry')
     const arr = []
     let offset = 0;
     // let infinite_scroll_offset = 0
@@ -180,7 +220,7 @@
       return response.json();
     }
 
-    const brand = (logo, name, status) => `
+    const brand = (logo, name, industry, status) => `
       <div class="table__item js-table-item">
           <div class="table__logo table__cell" data-content="Logo">
             <img src="${logo ? logo : 'https://place-hold.it/300x150'}" alt="logo">
@@ -188,7 +228,10 @@
           <div class="table__text table__cell js-search-by-name" data-content="Name">
             ${name}
           </div>
-          <div class="table__text table__cell" data-content="Status">
+          <div class="table__text table__cell js-search-by-industry" data-content="Industry">
+            ${industry}
+          </div>
+          <div class="table__text table__cell js-search-by-status" data-content="Status">
             ${status}
           </div>
           <div class="table__button table__cell">
@@ -200,12 +243,13 @@
     function recursiveGetAllItems() {
       if (offset === undefined) {
         return arr.flat().forEach(item => {
-          if (item.fields.Logo[0].url !== undefined) {
+          if (item.fields.Logo[0].url !== undefined && item.fields.Industry !== undefined) {
             body.insertAdjacentHTML('beforeend',
               brand(
                 item.fields.Logo[0].url,
                 item.fields.Name,
-                item.fields.Status,
+                item.fields.Industry,
+                item.fields.Status
               )
             )
           }
@@ -219,64 +263,46 @@
           recursiveGetAllItems()
         })
     }
+
+    function isItemAccaptable(inputName, inputStatus, InputIndustry, name, status, industry){
+      if(name.innerText.toLowerCase().indexOf(inputName) > -1 
+        && (inputStatus == "None" || inputStatus == status.innerText.trim())
+        && (InputIndustry == "None" || InputIndustry == industry.innerText.trim()))
+        return  true;
+
+      return false;
+    }
+
+    function filterItems() {
+      const nameInputValue = nameInput.value;
+      const statusInputValue = statusInput.value;
+      const industryInputValue = industryInput.value;
+
+      Array.from(body.querySelectorAll(".js-table-item"))
+        .forEach(item => {
+          const name = item.querySelector('.js-search-by-name')
+          const status = item.querySelector('.js-search-by-status')
+          const industry = item.querySelector('.js-search-by-industry')
+
+          if (isItemAccaptable(nameInputValue, statusInputValue, industryInputValue, name, status, industry)) {
+            item.removeAttribute("style");
+          } else {
+            item.setAttribute('style', 'display: none')
+          }
+        })
+    }
+
+
     try {
       recursiveGetAllItems()
-
-      //or get items by scroll
-
-      // const intersectionObserver = new IntersectionObserver(
-      //   (entries) => {
-      //     if (entries[0].intersectionRatio <= 0) return;
-      //     if(infinite_scroll_offset === undefined) return;
-      //
-      //     getBrands(infinite_scroll_offset)
-      //       .then((data) => {
-      //         infinite_scroll_offset = data.offset;
-      //         data.records.forEach(item => {
-      //           if (item.fields.Logo[0].url !== undefined) {
-      //             body.insertAdjacentHTML('beforeend',
-      //               brand(
-      //                 item.fields.Logo ? item.fields.Logo[0].url : 'https://place-hold.it/300x500',
-      //                 item.fields.Name,
-      //                 item.fields.Status,
-      //               ))
-      //           }
-      //         })
-      //       })
-      //   });
-      //   intersectionObserver.observe(trigger);
-
-      const search = document.getElementById('search-body');
-      const input = document.getElementById('search')
-
-      if (search && input) {
-        input.addEventListener('input', (e) => {
-          const val = e.target.value.toLowerCase();
-          let isSearchResultEmpty = 0
-          Array.from(search.querySelectorAll(".js-table-item"))
-            .forEach(item => {
-              const text = item.querySelector('.js-search-by-name')
-
-              if (text.innerText && text.innerText.toLowerCase().indexOf(val) > -1) {
-                item.removeAttribute("style");
-                isSearchResultEmpty -= 1
-              } else {
-                item.setAttribute('style', 'display: none !important')
-                isSearchResultEmpty += 1
-              }
-              if (isSearchResultEmpty >= search.querySelectorAll(".js-table-item").length) {
-                empty.removeAttribute("style");
-                table.setAttribute('style', 'display: none !important')
-              } else {
-                empty.setAttribute('style', 'display: none !important')
-                table.removeAttribute("style");
-              }
-            })
-        })
-      }
+      nameInput.addEventListener('input', (e) => filterItems())
+      statusInput.addEventListener('change', (e) => filterItems())
+      industryInput.addEventListener('change', (e) => filterItems())
     } catch (err) {
       console.log(err)
     }
+
+    document.getElementById('filter').addEventListener('submit', (e) => e.preventDefault())
   </script>
 
 </body>
