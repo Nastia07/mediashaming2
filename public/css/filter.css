@@ -170,3 +170,12 @@
     height: auto;
   }
 }
+
+
+#search-table {
+  /* We need to limit the height and show a scrollbar */
+  width: 850px;
+  height: 500px;
+  overflow: auto;
+}
+

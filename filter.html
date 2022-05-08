@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 </head>
 
-<body>
+<body  >
   <header>
     <div class="header__wrap">
       <a href="/" class="logo">
@@ -29,7 +29,7 @@
   </header>
 
   <main>
-    <div class="companies__wrap container">
+    <div  class="companies__wrap container">
       <h2 class="heading-title">Companies that support war</h2>
       <div class="filter">
         <div class="filter__header">
@@ -96,9 +96,8 @@
           <div class="table__text table__cell">Status</div>
         </div>
         <div id="search-body" class="table__body"></div>
-        <div class="js-scroll-trigger-infinite-scroll"></div>
       </div>
-      <div id="search-empty" style="display: none">
+      <div id="search-empty"  style="display: none">
         <h2 class="heading-title">Request not found. Please try another item.</h2>
         <svg width="749" height="166" viewBox="0 0 749 166" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_151_1953)">
@@ -186,7 +185,6 @@
         </svg>
       </div>
     </div>
-
   </main>
 
   <footer>
@@ -202,26 +200,18 @@
     const body = document.getElementById('search-body')
     const empty = document.getElementById('search-empty')
     const table = document.getElementById('search-table')
-    const trigger = document.querySelector('.js-scroll-trigger-infinite-scroll')
 
     const nameInput = document.getElementById('search-name')
     const statusInput = document.getElementById('search-status')
     const industryInput = document.getElementById('search-industry')
     const arr = []
     let offset = 0;
+    const itemsPerPage = 5;
+    let displayedItems = itemsPerPage;
     // let infinite_scroll_offset = 0
 
-    const getBrands = async (offset) => {
-      const API_URL = `https://api.airtable.com/v0/appuRF8EsJqiqYYR0/Grid%20view?api_key=keyPyOgHCLHxxHwae&pageSize=10&offset=${offset}`;
-      const response = await fetch(API_URL);
-      if (!response.ok) {
-        throw new Error(`An error occurred: ${response.status}`);
-      }
-      return response.json();
-    }
-
-    const brand = (logo, name, industry, status) => `
-      <div class="table__item js-table-item">
+    const brand = (logo, name, industry, status, isToDisplay) => `
+      <div class="table__item js-table-item" style="${isToDisplay ? "": "display: none"}">
           <div class="table__logo table__cell" data-content="Logo">
             <img src="${logo ? logo : 'https://place-hold.it/300x150'}" alt="logo">
           </div>
@@ -241,19 +231,23 @@
     `
 
     function recursiveGetAllItems() {
+      let index = 0;
       if (offset === undefined) {
-        return arr.flat().forEach(item => {
-          if (item.fields.Logo[0].url !== undefined && item.fields.Industry !== undefined) {
-            body.insertAdjacentHTML('beforeend',
+        return arr
+        .flat().forEach(item => {
+          if(item.fields.Logo[0].url !== undefined && item.fields.Industry !== undefined) {
+              index++;
+              body.insertAdjacentHTML('beforeend',
               brand(
                 item.fields.Logo[0].url,
                 item.fields.Name,
                 item.fields.Industry,
-                item.fields.Status
+                item.fields.Status,
+                index < displayedItems
               )
             )
           }
-        })
+        });
       }
       fetch(`https://api.airtable.com/v0/appuRF8EsJqiqYYR0/Grid%20view?api_key=keyPyOgHCLHxxHwae&offset=${offset}`)
         .then(response => response.json())
@@ -277,14 +271,16 @@
       const nameInputValue = nameInput.value;
       const statusInputValue = statusInput.value;
       const industryInputValue = industryInput.value;
-
+      var currentDisplayedItems = 0;
       Array.from(body.querySelectorAll(".js-table-item"))
         .forEach(item => {
           const name = item.querySelector('.js-search-by-name')
           const status = item.querySelector('.js-search-by-status')
           const industry = item.querySelector('.js-search-by-industry')
-
-          if (isItemAccaptable(nameInputValue, statusInputValue, industryInputValue, name, status, industry)) {
+          console.log(currentDisplayedItems);
+          if (isItemAccaptable(nameInputValue, statusInputValue, industryInputValue, name, status, industry)
+          && currentDisplayedItems < displayedItems) {
+            currentDisplayedItems++;
             item.removeAttribute("style");
           } else {
             item.setAttribute('style', 'display: none')
@@ -295,12 +291,33 @@
 
     try {
       recursiveGetAllItems()
-      nameInput.addEventListener('input', (e) => filterItems())
-      statusInput.addEventListener('change', (e) => filterItems())
-      industryInput.addEventListener('change', (e) => filterItems())
+      nameInput.addEventListener('input', (e) => {
+        displayedItems = itemsPerPage;
+        filterItems()
+      })
+      statusInput.addEventListener('change', (e) => {
+        displayedItems = itemsPerPage;
+        filterItems()
+      })
+      industryInput.addEventListener('change', (e) =>  {
+        displayedItems = itemsPerPage;
+        filterItems()
+      })
     } catch (err) {
       console.log(err)
     }
+
+    table.addEventListener('scroll', function() {
+      console.log(`table.scrollTop ${table.scrollTop}`)
+      console.log(`table.clientHeight ${table.clientHeight}`)
+      console.log(`table.scrollHeight ${table.scrollHeight}`)
+      if (table.scrollTop + table.clientHeight >= table.scrollHeight - 20) {
+        displayedItems += itemsPerPage;
+        console.log(`loadMore ${displayedItems}`);
+
+        filterItems();
+      }
+    });
 
     document.getElementById('filter').addEventListener('submit', (e) => e.preventDefault())
   </script>
