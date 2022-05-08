@@ -2,6 +2,7 @@
   --orange: #ff7a00;
   --grey: #292929;
   --blue: #f1fcfd;
+  --light-grey: #b7b3b3;
 }
 
 *,
@@ -176,80 +177,6 @@ button {
   padding-top: 80px;
 }
 
-.companies__area {
-  padding-top: 30px;
-  padding-bottom: 30px;
-}
-
-.companies__list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: 30px;
-  row-gap: 30px;
-  margin-top: 30px;
-}
-
-.companies__list img {
-  max-width: 100px;
-}
-
-.companies__item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 23px;
-  height: 97px;
-  border: 1px solid #a0a0a0;
-  border-radius: 5px;
-  color: black;
-  background-color: #fff;
-  transition: all 0.5s ease;
-}
-
-.companies__btn_show {
-  cursor: default;
-  width: 100%;
-  text-align: left;
-  font-size: 18px;
-  text-transform: uppercase;
-  font-weight: 600;
-  position: relative;
-  background-color: transparent;
-  transition: all 0.3s ease;
-}
-
-.companies__item:hover,
-.companies__item:focus {
-  color: var(--orange);
-  border-color: var(--orange);
-}
-
-.companies__item:hover .company__link,
-.companies__item:focus .company__link {
-  background-color: #fff;
-  border-color: var(--orange);
-  color: var(--orange);
-}
-
-.company__link {
-  background-color: var(--orange);
-  width: 100px;
-  height: 50px;
-  padding: 5px 12px;
-  font-size: 14px;
-  line-height: 1.3;
-  font-weight: 600;
-  color: white;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  text-align: center;
-  transition: all 0.5s ease;
-}
-.company__name {
-  width: 100%;
-  padding-left: 15px;
-}
-
 .war_info__text {
   padding-top: 80px;
 }
@@ -274,22 +201,235 @@ button {
   object-fit: cover;
 }
 
+.filter {
+  padding-bottom: 34px;
+}
+
+.button {
+  height: 50px;
+  width: 100%;
+  padding: 5px 12px;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  text-align: center;
+  transition: all 0.5s ease;
+  background-color: var(--orange);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button:hover {
+  background-color: #fff;
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.input {
+  position: relative;
+  width: 100%;
+}
+
+.input__item {
+  border: 1px solid var(--light-grey);
+  height: 52px;
+  border-radius: 7px;
+  padding: 10px;
+  width: 100%;
+  font-size: 17px;
+}
+
+.input__item::placeholder {
+  font-family: inherit;
+  font-size: 17px;
+  color: #606060;
+  transition: all 0.3s ease;
+}
+
+.input__item:focus::placeholder {
+  opacity: 0;
+  text-indent: 24px;
+}
+
+.input__item--search {
+  padding-left: 60px;
+  margin-bottom: 20px;
+}
+
+.input__submit {
+  position: absolute;
+  top: 12px;
+  left: 21px;
+  margin: 0;
+  outline: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  width: auto;
+  overflow: visible;
+}
+
+.input__submit:focus,
+.input__submit:hover {
+  background: no-repeat;
+  outline: none;
+}
+
+.input select {
+  font-family: inherit;
+  font-size: 17px;
+  color: #606060;
+  min-width: 120px;
+  border: 1px solid var(--light-grey);
+  padding: 10px;
+  font-family: inherit;
+  border-radius: 5px;
+}
+
+#search-status {
+  margin-right: 10px;
+}
+
+.table {
+  width: 100%;
+  border: 1px solid var(--light-grey);
+  border-radius: 5px;
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.table__header {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  border-bottom: 1px solid var(--light-grey);
+  border-radius: 5px 5px 0% 0%;
+  font-weight: 500;
+  height: 56px;
+  position: sticky;
+  top: 0px;
+  width: 100%;
+  background-color: white;
+  z-index: 100;
+}
+.table__body {
+  /* We need to limit the height and show a scrollbar */
+  height: 400px;
+  overflow: auto;
+}
+
+.table__item {
+  border-bottom: 1px solid var(--light-grey);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+}
+
+.table__item:nth-of-type(odd) {
+  background-color: var(--blue);
+}
+
+.table__text {
+  font-size: 17px;
+  line-height: 21px;
+}
+
+.table__cell {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 50px;
+}
+
+.table__cell:last-child {
+  padding-right: 50px;
+}
+
+.table__flag {
+  display: block;
+  max-width: 100%;
+}
+
+.table__logo img {
+  display: block;
+  width: 100px;
+  height: 80px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.heading-title {
+  margin-bottom: 48px;
+}
+
+#search-empty {
+  margin-bottom: 50px;
+  width: 100%;
+}
+
+#search-empty svg {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 1024px) {
+  .table__cell {
+    padding-left: 20px;
+  }
+
+  .table__cell:last-child {
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  [data-content]:before {
+    display: block;
+    content: attr(data-content);
+    font-size: 14px;
+    font-family: "Montserrat";
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .table__header {
+    display: none;
+  }
+  .table__body {
+    height: 442px;
+  }
+
+  .table__item {
+    display: block;
+    border-bottom: 1px solid var(--light-grey);
+  }
+
+  .table__item:first-child {
+    border-top: 0;
+  }
+
+  .table__logo img {
+    width: 250px;
+    height: auto;
+  }
+
+  .input select {
+    width: 100%;
+  }
+  #search-status {
+    margin-right: 0px;
+    margin-bottom: 20px;
+  }
+}
+
 @media screen and (max-width: 1420px) {
   .container {
     padding-left: 100px;
     padding-right: 100px;
-  }
-
-  .companies__item {
-    padding: 15px;
-    height: 80px;
-  }
-
-  .companies__list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 20px;
-    row-gap: 20px;
   }
 
   .companies__wrap,
@@ -337,51 +477,6 @@ button {
     height: 255px;
   }
 
-  .companies__btn_show {
-    color: #000000;
-    padding-right: 40px;
-  }
-  .companies__btn_show::after,
-  .companies__btn_show::before {
-    position: absolute;
-    content: "";
-    width: 15px;
-    height: 0px;
-    background-color: black;
-    border: 0.5px solid #000000;
-    top: calc(50% - 5px);
-    right: 13px;
-    transition: all 0.3s ease;
-  }
-  .companies__btn_show:hover {
-    color: var(--grey);
-  }
-  .companies__btn_show:hover::after,
-  .companies__btn_show:hover::before {
-    border-color: var(--grey);
-    background-color: var(--grey);
-  }
-
-  .companies__btn_show::before {
-    transform: rotate(-90deg);
-  }
-
-  .companies__btn_show.active::before {
-    transform: rotate(0deg);
-  }
-
-  .companies__list {
-    display: none;
-  }
-  .companies__list.active {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .companies__area {
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
   .footer__wrap a {
     left: 50px;
   }
@@ -441,18 +536,7 @@ button {
     height: 45px;
   }
 
-  .companies__item {
-    padding: 20px 10px;
-  }
-  .companies__item img {
-    width: 55px;
-  }
   .scroll__down {
     bottom: 20px;
-  }
-
-  .companies__area {
-    padding-top: 15px;
-    padding-bottom: 15px;
   }
 }

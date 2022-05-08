@@ -1,152 +1,166 @@
 document.addEventListener("DOMContentLoaded", function (event) {
-  const foodCompaniesNode = document.getElementById("companies__food");
-  const autoCompaniesNode = document.getElementById("companies__auto");
-  const agriculturalCompaniesNode = document.getElementById(
-    "companies__agricultural"
-  );
-  const bankCompaniesNode = document.getElementById("companies__bank");
+  const body = document.getElementById("search-body");
+  const empty = document.getElementById("search-empty");
+  const table = document.getElementById("search-table");
+  const tableBody = document.getElementById("search-body");
 
-  const foodCompanies = [
-    {
-      name: "Unilever",
-      src: "./public/img/companies/1.png",
-      link: "#",
-    },
-    {
-      name: "Metro AG",
-      src: "./public/img/companies/2.png",
-      link: "#",
-    },
-    {
-      name: "Danone",
-      src: "./public/img/companies/3.png",
-      link: "#",
-    },
-    {
-      name: "Nestlé",
-      src: "./public/img/companies/4.png",
-      link: "nestle.html",
-    },
-    {
-      name: "Johnson & Johnson",
-      src: "./public/img/companies/5.png",
-      link: "#",
-    },
-    {
-      name: "Auchan",
-      src: "./public/img/companies/6.png",
-      link: "auchan.html",
-    },
-  ];
-  const autoCompanies = [
-    {
-      name: "Renault",
-      src: "./public/img/companies/auto1.png",
-      link: "#",
-    },
-    {
-      name: "SKF",
-      src: "./public/img/companies/auto2.png",
-      link: "skf.html",
-    },
-    {
-      name: " Bosch",
-      src: "./public/img/companies/auto3.png",
-      link: "#",
-    },
-    {
-      name: "Danieli",
-      src: "./public/img/companies/auto4.png",
-      link: "danieli.html",
-    },
-    {
-      name: "Grundfos",
-      src: "./public/img/companies/auto5.png",
-      link: "#",
-    },
-    {
-      name: "Geberit",
-      src: "./public/img/companies/auto6.png",
-      link: "#",
-    },
-  ];
-  const agriculturalCompanies = [
-    {
-      name: "Syngenta",
-      src: "./public/img/companies/ag1.png",
-      link: "syngenta.html",
-    },
-    {
-      name: "Tetra Pak",
-      src: "./public/img/companies/ag2.jpg",
-      link: "tetrapak.html",
-    },
-    {
-      name: "Dow Chemical",
-      src: "./public/img/companies/ag3.png",
-      link: "#",
-    },
-  ];
-  const bankCompanies = [
-    {
-      name: "UniCredit",
-      src: "./public/img/companies/bank1.png",
-      link: "#",
-    },
-    {
-      name: "CreditSuisse",
-      src: "./public/img/companies/bank2.png",
-      link: "#",
-    },
-    {
-      name: "Lloyds insurance",
-      src: "./public/img/companies/bank3.png",
-      link: "lloyd.html",
-    },
-  ];
+  const nameInput = document.getElementById("search-name");
+  const statusInput = document.getElementById("search-status");
+  const industryInput = document.getElementById("search-industry");
+  const arr = [];
+  let offset = 0;
+  const itemsPerPage = 5;
+  let displayedItems = itemsPerPage;
+  // let infinite_scroll_offset = 0
 
-  function setCompanies(elementArray, parent) {
-    elementArray.forEach((company) =>
-      parent.insertAdjacentHTML(
-        "beforeend",
-        `<a href="${company.link}" class="companies__item">
-        <img src="${company.src}" alt="logo">
-        <div class="company__name">${company.name}</div>
-        <div class="company__link">View funding</div>
-      </a>
-    `
-      )
-    );
+  const brand = (logo, name, industry, status, isToDisplay) => `
+    <div class="table__item js-table-item" style="${
+      isToDisplay ? "" : "display: none"
+    }">
+        <div class="table__logo table__cell" data-content="Logo">
+          <img src="${
+            logo ? logo : "https://place-hold.it/300x150"
+          }" alt="logo">
+        </div>
+        <div class="table__text table__cell js-search-by-name" data-content="Name">
+          ${name}
+        </div>
+        <div class="table__text table__cell js-search-by-industry" data-content="Industry">
+          ${industry}
+        </div>
+        <div class="table__text table__cell js-search-by-status" data-content="Status">
+          ${status}
+        </div>
+        <div class="table__button table__cell">
+          <a href="#" class="button">View funding</a>
+        </div>
+      </div>
+  `;
+
+  function recursiveGetAllItems() {
+    let index = 0;
+    if (offset === undefined) {
+      return arr.flat().forEach((item) => {
+        if (
+          item.fields.Logo[0].url !== undefined &&
+          item.fields.Industry !== undefined
+        ) {
+          index++;
+          body.insertAdjacentHTML(
+            "beforeend",
+            brand(
+              item.fields.Logo[0].url,
+              item.fields.Name,
+              item.fields.Industry,
+              item.fields.Status,
+              index < displayedItems
+            )
+          );
+        }
+      });
+    }
+    fetch(
+      `https://api.airtable.com/v0/appuRF8EsJqiqYYR0/Grid%20view?api_key=keyPyOgHCLHxxHwae&offset=${offset}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        offset = data.offset;
+        arr.push(data.records);
+        recursiveGetAllItems();
+      });
   }
 
-  setCompanies(foodCompanies, foodCompaniesNode);
-  setCompanies(autoCompanies, autoCompaniesNode);
-  setCompanies(agriculturalCompanies, agriculturalCompaniesNode);
-  setCompanies(bankCompanies, bankCompaniesNode);
+  function isItemAccaptable(
+    inputName,
+    inputStatus,
+    InputIndustry,
+    name,
+    status,
+    industry
+  ) {
+    if (
+      name.innerText.toLowerCase().indexOf(inputName) > -1 &&
+      (inputStatus == "None" || inputStatus == status.innerText.trim()) &&
+      (InputIndustry == "None" || InputIndustry == industry.innerText.trim())
+    )
+      return true;
 
-  const companiesAccordionHead = document.getElementsByClassName(
-    "companies__btn_show"
-  );
-
-  function showAcc() {
-    const firstArea = companiesAccordionHead[0].nextElementSibling;
-    companiesAccordionHead[0].classList.add("active");
-    firstArea.classList.add("active");
-
-    [...companiesAccordionHead].forEach((e, i) =>
-      setTimeout(function () {
-        e.addEventListener("click", function () {
-          if (window.innerWidth <= 1024) {
-            this.classList.toggle("active");
-            let panel = this.nextElementSibling;
-            panel.classList.toggle("active");
-          }
-        });
-      }, 300)
-    );
+    return false;
   }
 
-  showAcc();
+  function filterItems() {
+    const nameInputValue = nameInput.value;
+    const statusInputValue = statusInput.value;
+    const industryInputValue = industryInput.value;
+    var currentDisplayedItems = 0;
+    Array.from(body.querySelectorAll(".js-table-item")).forEach((item) => {
+      const name = item.querySelector(".js-search-by-name");
+      const status = item.querySelector(".js-search-by-status");
+      const industry = item.querySelector(".js-search-by-industry");
+      if (
+        isItemAccaptable(
+          nameInputValue,
+          statusInputValue,
+          industryInputValue,
+          name,
+          status,
+          industry
+        ) &&
+        currentDisplayedItems < displayedItems
+      ) {
+        currentDisplayedItems++;
+        item.removeAttribute("style");
+      } else {
+        item.setAttribute("style", "display: none");
+      }
+    });
+
+    const numberOfElements = Array.from(
+      body.querySelectorAll(".js-table-item")
+    ).filter(function (node) {
+      return node.style.display !== "none";
+    }).length;
+
+    if (numberOfElements == 0) {
+      table.setAttribute("style", "display: none");
+      empty.setAttribute("style", "display: block");
+    } else {
+      table.setAttribute("style", "display: block");
+      empty.setAttribute("style", "display: none");
+    }
+  }
+
+  try {
+    recursiveGetAllItems();
+    nameInput.addEventListener("input", (e) => {
+      displayedItems = itemsPerPage;
+      filterItems();
+    });
+    statusInput.addEventListener("change", (e) => {
+      displayedItems = itemsPerPage;
+      filterItems();
+    });
+    industryInput.addEventListener("change", (e) => {
+      displayedItems = itemsPerPage;
+      filterItems();
+    });
+  } catch (err) {
+    console.log(err);
+  }
+
+  tableBody.addEventListener("scroll", function () {
+    if (
+      tableBody.scrollTop + tableBody.clientHeight >=
+      tableBody.scrollHeight - 20
+    ) {
+      displayedItems += itemsPerPage;
+      filterItems();
+    }
+  });
+
+  document
+    .getElementById("filter")
+    .addEventListener("submit", (e) => e.preventDefault());
 
   const swiperLength =
     document.getElementsByClassName("war_info__slider").length;
