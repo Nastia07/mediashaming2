@@ -330,10 +330,6 @@ button {
   align-items: center;
 }
 
-.table__item:nth-of-type(odd) {
-  background-color: var(--blue);
-}
-
 .table__text {
   font-size: 17px;
   line-height: 21px;
@@ -419,6 +415,7 @@ button {
 
   .input select {
     width: 100%;
+    background-color: white;
   }
   #search-status {
     margin-right: 0px;
