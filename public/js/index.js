@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   const industryInput = document.getElementById("search-industry");
   const arr = [];
   let offset = 0;
-  const itemsPerPage = 5;
+  const itemsPerPage = 7;
   let displayedItems = itemsPerPage;
   // let infinite_scroll_offset = 0
 
