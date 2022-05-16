@@ -481,6 +481,11 @@ p {
   display: grid;
   grid-template-columns: 0.6fr 1fr;
   column-gap: 100px;
+  margin-bottom: 45px;
+}
+.about_RHS__text {
+  width: 75%;
+  margin: 20px auto;
 }
 
 .triangle {
@@ -831,6 +836,9 @@ p {
   .card {
     max-width: none;
     height: auto;
+  }
+  .about_RHS__text {
+    width: 100%;
   }
 }
 
