@@ -90,6 +90,14 @@ p {
   background-color: #fff;
   color: var(--orange);
 }
+.ask__wrap .orange_button {
+  background-color: #08a8e9 !important;
+}
+.ask__wrap .orange_button:hover {
+  background-color: #0778a5 !important;
+  color: white;
+  border-color: transparent;
+}
 
 .title {
   display: block;
@@ -137,6 +145,9 @@ p {
   padding-top: 180px;
   display: grid;
   justify-content: center;
+}
+.hero__wrap.ch {
+  padding-top: 50px;
 }
 
 .hero__image {
