@@ -486,9 +486,12 @@ p {
   column-gap: 100px;
   margin-bottom: 45px;
 }
-.about_RHS__text {
-  width: 75%;
-  margin: 20px auto 0;
+
+.about_RHS__wrap {
+  padding-top: 150px !important;
+  display: grid;
+  grid-template-columns: 0.4fr 0.6fr;
+  column-gap: 30px;
 }
 
 .triangle {
@@ -728,6 +731,13 @@ p {
   .responsible__wrap {
     column-gap: 20px;
   }
+  .about_RHS__wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 30px;
+    row-gap: 30px;
+    padding-top: 50px !important;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -824,8 +834,6 @@ p {
   }
 
   .responsible__img {
-    width: 70%;
-    margin: auto;
     margin-bottom: 10px;
   }
   .parts-of-company__content {
